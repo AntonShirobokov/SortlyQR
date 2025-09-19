@@ -1,0 +1,9 @@
+[submodule "Frontend_microservice"]
+	path = Frontend_microservice
+	url = https://github.com/AntonShirobokov/Frontend
+[submodule "Authorization_microservice"]
+	path = Authorization_microservice
+	url = https://github.com/AntonShirobokov/Authorization_microservice
+[submodule "Qr_management_microservice"]
+	path = Qr_management_microservice
+	url = https://github.com/AntonShirobokov/Qr_management_microservice
