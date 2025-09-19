@@ -7,3 +7,6 @@
 [submodule "Qr_management_microservice"]
 	path = Qr_management_microservice
 	url = https://github.com/AntonShirobokov/Qr_management_microservice
+[submodule "API_Gateway"]
+	path = API_Gateway
+	url = https://github.com/AntonShirobokov/API_Gateway
