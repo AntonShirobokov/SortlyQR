@@ -10,7 +10,8 @@
 
 ## Архитектура проекта
 
-<img width="1880" height="994" alt="image" src="https://github.com/user-attachments/assets/07a60eae-05cb-4849-bb06-bae8d3e899b2" />
+<img width="1201" height="737" alt="image" src="https://github.com/user-attachments/assets/7b3c04e7-26d2-44fb-b99a-1fc4b844b0b7" />
+
 
 
 **Общая схема:**
@@ -18,12 +19,12 @@
 - API Gateway — единая точка входа для клиентов  
 - Authorization microservice — авторизация и аутентификация  
 - QR Management microservice — управление QR-кодами  
-- QR Gateway microservice — обработка сканирований  
-- Analytics microservice — сбор и анализ статистики  
+- QR Redirect microservice — обработка сканирований  
+- QR Analytics microservice — сбор и анализ статистики  
 
 ## Микросервисы
 
-### 1. Auth Service
+### 1. Authorization microservice
 - **Назначение:** регистрация, вход, выдача JWS (асимметричная подпись)  
 - **Инструменты:**  
   - PostgreSQL (пользователи, хэши паролей, роли)  
@@ -32,35 +33,35 @@
 
 ---
 
-### 2. QR Management Service
-- **Назначение:** создание, редактирование и удаление QR-кодов; хранение `slug → target_url`  
+### 2. QR Management microservice
+- **Назначение:** создание, редактирование и удаление QR-кодов;  
 - **Инструменты:**  
   - PostgreSQL (хранилище QR-кодов)
-
+  - RabbitMQ (отправка событий о создании или удалении qr кода в QR Redirect microservice)
 ---
 
-### 3. QR Gateway Service
+### 3. QR Redirect microservice
 - **Назначение:** обработка сканирований, редиректы, сбор статистики  
 - **Инструменты:**  
-  - Redis (slug → target_url, быстрый редирект)  
+  - Redis (для кэширования редиректов)  
   - RabbitMQ (отправка событий о сканировании в Analytics)  
   - PostgreSQL
 
 ---
 
-### 4. Analytics Service
+### 4. QR Analytics microservice
 - **Назначение:** хранение и анализ статистики сканирований  
 - **Инструменты:**  
-  - TimescaleDB (расширение PostgreSQL) или MongoDB (временные ряды)  
-  - RabbitMQ (приём событий от Gateway)  
+  - TimescaleDB (расширение PostgreSQL)
+  - RabbitMQ (QR Redirect microservice)  
 
 ---
 
 ### 5. API Gateway
 - **Назначение:** единая точка входа для фронтенда, маршрутизация и фильтры  
 - **Инструменты:**  
-  - Spring Cloud Gateway (Java)  
-  - Интеграция: Auth, QR Management, Analytics  
+  - Spring Cloud Gateway
+  - Интеграция: Authorization microservice, QR Management microservice, QR Analytics microservice
 
 ---
 
