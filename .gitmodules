@@ -10,3 +10,9 @@
 [submodule "API_Gateway"]
 	path = API_Gateway
 	url = https://github.com/AntonShirobokov/API_Gateway
+[submodule "Qr_redirect_microservice"]
+	path = Qr_redirect_microservice
+	url = https://github.com/AntonShirobokov/Qr_redirect_microservice
+[submodule "Qr_analytics_microservice"]
+	path = Qr_analytics_microservice
+	url = https://github.com/AntonShirobokov/Qr_analytics_microservice
