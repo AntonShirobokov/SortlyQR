@@ -1,18 +1,24 @@
 [submodule "Frontend_microservice"]
 	path = Frontend_microservice
 	url = https://github.com/AntonShirobokov/Frontend
+	branch = main
 [submodule "Authorization_microservice"]
 	path = Authorization_microservice
 	url = https://github.com/AntonShirobokov/Authorization_microservice
+	branch = main
 [submodule "Qr_management_microservice"]
 	path = Qr_management_microservice
 	url = https://github.com/AntonShirobokov/Qr_management_microservice
+	branch = main
 [submodule "API_Gateway"]
 	path = API_Gateway
 	url = https://github.com/AntonShirobokov/API_Gateway
+	branch = main
 [submodule "Qr_redirect_microservice"]
 	path = Qr_redirect_microservice
 	url = https://github.com/AntonShirobokov/Qr_redirect_microservice
+	branch = main
 [submodule "Qr_analytics_microservice"]
 	path = Qr_analytics_microservice
 	url = https://github.com/AntonShirobokov/Qr_analytics_microservice
+	branch = main
