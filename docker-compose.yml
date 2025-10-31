@@ -1,0 +1,148 @@
+services:
+  authorization-microservice-db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: authorization_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - authorization-microservice-db-data:/var/lib/postgresql
+
+  qr_analytics_microservice_db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: qr_analytics_db
+    ports:
+      - "5436:5432"
+    volumes:
+      - qr_analytics_microservice-db-data:/var/lib/postgresql
+
+  qr_management_microservice_db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: qr_management_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - qr_management_microservice-db-data:/var/lib/postgresql
+
+  rabbitmq:
+    image: rabbitmq:management
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+  qr_redirect_microservice_db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: qr_redirect_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - qr_redirect_microservice-db-data:/var/lib/postgresql
+
+  qr_redis:
+    image: redis:latest
+    environment:
+      REDIS_PASSWORD: password
+    command: >
+      sh -c "redis-server --appendonly yes --requirepass \"${REDIS_PASSWORD}\""
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  redis_insight:
+    image: redis/redisinsight:latest
+    container_name: redis_insight
+    ports:
+      - "5540:5540"
+    environment:
+      - RI_REDIS_HOST=qr_redis
+      - RI_REDIS_PORT=6379
+      - RI_REDIS_PASSWORD=password
+    depends_on:
+      - qr_redis
+    restart: unless-stopped
+
+  api-gateway:
+    build:
+      context: ./API_Gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+
+  authorization-microservice:
+    build:
+      context: ./Authorization_microservice
+      dockerfile: Dockerfile
+    container_name: authorization-microservice
+    ports:
+      - "8081:8080"
+    depends_on:
+      - authorization-microservice-db
+
+  qr-management-microservice:
+    build:
+      context: ./Qr_management_microservice
+      dockerfile: Dockerfile
+    container_name: qr-management-microservice
+    ports:
+      - "8082:8080"
+    depends_on:
+      - qr_management_microservice_db
+      - rabbitmq
+
+  qr-redirect-microservice:
+    build:
+      context: ./Qr_redirect_microservice
+      dockerfile: Dockerfile
+    container_name: qr-redirect-microservice
+    ports:
+      - "8083:8080"
+    depends_on:
+      - qr_redirect_microservice_db
+      - qr-management-microservice
+      - qr_redis
+      - redis_insight
+
+  qr-analytics-microservice:
+    build:
+      context: ./Qr_analytics_microservice
+      dockerfile: Dockerfile
+    container_name: qr-analytics-microservice
+    ports:
+      - "8084:8080"
+    depends_on:
+      - qr_analytics_microservice_db
+      - qr-management-microservice
+
+  frontend-microservice:
+    build:
+      context: ./Frontend_microservice
+      dockerfile: Dockerfile
+    container_name: frontend-microservice
+    ports:
+      - "5173:5173"
+
+volumes:
+  authorization-microservice-db-data:
+  qr_analytics_microservice-db-data:
+  qr_management_microservice-db-data:
+  qr_redirect_microservice-db-data:
+  rabbitmq-data:
+  redis-data:
