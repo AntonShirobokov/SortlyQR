@@ -83,7 +83,7 @@
 ### 1. Клонирование репозитория
 Склонируйте проект на ваш сервер или локальную машину:
 
-git clone https://github.com/AntonShirobokov/SortlyQR
+**git clone https://github.com/AntonShirobokov/SortlyQR**
 
 ### 2. Настройка микросервиса API_Gateway
 
@@ -100,14 +100,16 @@ frontend:
 и укажите IP-адрес вашего сервера в следующих параметрах:
 
 VITE_API_GATEWAY_BASEURL=http://<ip-адрес>:8080
+
 VITE_QR_MANAGEMENT_BASEURL=http://<ip-адрес>:5173
+
 VITE_QR_REDIRECT_BASEURL=http://<ip-адрес>:8083
 
 ### 4. Запуск приложения
 
 После того как все настройки указаны, выполните команду для сборки и запуска всех микросервисов:
 
-docker compose up
+**docker compose up**
 
 После успешного запуска приложение будет доступно по адресу: http://<ip-адрес>:5173
 
